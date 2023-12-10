@@ -1,5 +1,4 @@
-const { ObjectId } = require("mongoose").Types;
-const { User, Thought } = require("../models");
+const { User } = require("../models");
 
 module.exports = {
   // get all users
@@ -60,8 +59,48 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ message: "No user found with that Id" });
       }
+
+      res.json({ message: "User succesfuly deleted" });
     } catch (err) {
-      res.status();
+      res.status(500).json(err);
+    }
+  },
+
+  // add friend
+  async addFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "No user/friend with that Id" });
+      }
+
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // remove friend
+  async removeFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "No user found with that Id" });
+      }
+
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
     }
   },
 };

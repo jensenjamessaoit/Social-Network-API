@@ -45,7 +45,24 @@ module.exports = {
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
-      res.json(user);
+      res.json({ user });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // edit user
+  async editUser(req, res) {
+    try {
+      const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+        new: true,
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: "no user found with that Id" });
+      }
+
+      res.json({ user });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -79,7 +96,7 @@ module.exports = {
         return res.status(404).json({ message: "No user/friend with that Id" });
       }
 
-      res.json(user);
+      res.json({ user });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -98,7 +115,7 @@ module.exports = {
         return res.status(404).json({ message: "No user found with that Id" });
       }
 
-      res.json(user);
+      res.json({ user });
     } catch (err) {
       res.status(500).json(err);
     }

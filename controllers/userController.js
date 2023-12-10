@@ -4,15 +4,9 @@ module.exports = {
   // get all users
   async getUsers(req, res) {
     try {
-      const users = await User.find()
-        .populate({ path: "thoughts", select: "-__v" })
-        .populate({ path: "freinds", select: "-__v" });
+      const users = await User.find();
 
-      const usersObj = {
-        users,
-      };
-
-      res.json(usersObj);
+      res.json(users);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -30,11 +24,7 @@ module.exports = {
         return res.status(404).json({ message: "No user with that ID" });
       }
 
-      const userObj = {
-        user,
-      };
-
-      res.json(userObj);
+      res.json(user);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -45,9 +35,9 @@ module.exports = {
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
-      res.json({ user });
+      res.json(user);
     } catch (err) {
-      res.status(500).json(err);
+      res.status(500).json({ err });
     }
   },
 
@@ -62,7 +52,7 @@ module.exports = {
         return res.status(404).json({ message: "no user found with that Id" });
       }
 
-      res.json({ user });
+      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -96,7 +86,7 @@ module.exports = {
         return res.status(404).json({ message: "No user/friend with that Id" });
       }
 
-      res.json({ user });
+      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -115,7 +105,7 @@ module.exports = {
         return res.status(404).json({ message: "No user found with that Id" });
       }
 
-      res.json({ user });
+      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }

@@ -23,7 +23,7 @@ module.exports = {
   // get one user
   async getOneUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userID })
+      const user = await User.findOne({ _id: req.params.userId })
         .populate({ path: "thoughts", select: "-__v" })
         .populate({ path: "friends", select: "-__v" });
 
@@ -42,12 +42,26 @@ module.exports = {
     }
   },
 
+  // create user
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
       res.json(user);
     } catch (err) {
       res.status(500).json(err);
+    }
+  },
+
+  // delete user
+  async deleteUser(req, res) {
+    try {
+      const user = await User.findOneAndRemove({ _id: req.params.userId });
+
+      if (!user) {
+        return res.status(404).json({ message: "No user found with that Id" });
+      }
+    } catch (err) {
+      res.status();
     }
   },
 };
